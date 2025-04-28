@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"machinarius.github.io/gotodos/internal/routes"
+	"machinarius.github.io/gotodos/internal/api/routes"
 )
 
 func main() {
