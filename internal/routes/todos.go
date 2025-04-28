@@ -8,6 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetToDosHandler(c *gin.Context) {
+func getToDosHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, store.GetAll())
 }
