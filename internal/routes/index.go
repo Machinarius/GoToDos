@@ -5,5 +5,5 @@ import (
 )
 
 func ConfigureRoutes(r *gin.Engine) {
-	r.GET("/todos", GetToDosHandler)
+	r.GET("/api/todos", GetToDosHandler)
 }

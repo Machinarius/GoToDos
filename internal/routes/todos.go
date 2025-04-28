@@ -9,5 +9,5 @@ import (
 )
 
 func GetToDosHandler(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, store.GetAll())
+	c.JSON(http.StatusOK, store.GetAll())
 }
