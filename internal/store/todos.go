@@ -1,32 +1,50 @@
 package store
 
 import (
-	"github.com/google/uuid"
+	"fmt"
+	"time"
+
 	"machinarius.github.io/gotodos/internal/models"
+	"machinarius.github.io/gotodos/internal/store/database"
 )
 
-var todos = []models.TodoItem{
-	{
-		ID:          "46abba7e-7ed7-4f16-b1d3-8cc0cc0e4f17",
-		Text:        "Buy milk",
-		CompletedAt: nil,
-	},
-	{
-		ID:          "efd7a661-6e88-403d-beca-25a3beb26948",
-		Text:        "Buy eggs",
-		CompletedAt: nil,
-	},
+func GetAll() ([]*models.TodoItem, error) {
+	var todoRecords []database.TodoRecord
+	todosResult := database.DB.Find(&todoRecords)
+	if todosResult.Error != nil {
+		return nil, fmt.Errorf("could not load todos: %w", todosResult.Error)
+	}
+
+	var todos []*models.TodoItem
+	if len(todoRecords) == 0 {
+		todos = []*models.TodoItem{}
+	} else {
+		for _, todoRecord := range todoRecords {
+			todos = append(todos, unwrapRecord(&todoRecord))
+		}
+	}
+	return todos, nil
 }
 
-func GetAll() []models.TodoItem {
-	return todos
+func Create(text string) ([]*models.TodoItem, error) {
+	todoRecord := database.TodoRecord{
+		Text: text,
+	}
+	result := database.DB.Create(&todoRecord)
+	if result.Error != nil {
+		return nil, fmt.Errorf("could not create todo: %w", result.Error)
+	}
+	return GetAll()
 }
 
-func Create(text string) []models.TodoItem {
-	todos = append(todos, models.TodoItem{
-		ID:          uuid.NewString(),
-		Text:        text,
-		CompletedAt: nil,
-	})
-	return todos
+func unwrapRecord(record *database.TodoRecord) *models.TodoItem {
+	var completedAt *time.Time
+	if record.CompletedAt.Valid {
+		completedAt = &record.CompletedAt.Time
+	}
+	return &models.TodoItem{
+		ID:          record.ID,
+		Text:        record.Text,
+		CompletedAt: completedAt,
+	}
 }

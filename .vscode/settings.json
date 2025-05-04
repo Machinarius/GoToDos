@@ -1,3 +1,15 @@
 {
-  "makefile.configureOnOpen": false
+  "makefile.configureOnOpen": false,
+  "go.toolsManagement.autoUpdate": true,
+  "go.lintTool": "staticcheck",
+  "go.lintOnSave": "package",
+  "go.vetOnSave": "package",
+  "go.useLanguageServer": true,
+  "[go]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    },
+    "editor.formatOnSave": true
+  }
 }

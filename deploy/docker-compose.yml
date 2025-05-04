@@ -1,0 +1,14 @@
+services:
+  todos-db:
+    image: postgres:17.4-alpine
+    ports:
+      - "3432:5432"
+    volumes:
+      - todos-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: todosUser
+      POSTGRES_PASSWORD: todosLocalPassword
+      POSTGRES_DB: todosdb
+
+volumes:
+  todos-db-data:

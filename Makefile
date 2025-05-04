@@ -8,3 +8,7 @@ down:
 
 run:
 	- go run ./cmd/server.go
+
+lint:
+	- go vet ./...
+	- staticcheck ./...

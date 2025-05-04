@@ -10,7 +10,12 @@ import (
 )
 
 func getToDosHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, store.GetAll())
+	todos, err := store.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, todos)
 }
 
 func createToDosHandler(c *gin.Context) {
@@ -19,5 +24,10 @@ func createToDosHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, store.Create(req.Text))
+	todos, err := store.Create(req.Text)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, todos)
 }
