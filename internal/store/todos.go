@@ -15,18 +15,12 @@ func GetAll() ([]*models.TodoItem, error) {
 		return nil, fmt.Errorf("could not load todos: %w", todosResult.Error)
 	}
 
-	var todos []*models.TodoItem
-	if len(todoRecords) == 0 {
-		// The loop won't be executed if the slice is empty so we need
-		// to initialize it here.
-		todos = []*models.TodoItem{}
-	} else {
-		// Mapping is idiomatically done in a loop, rather than a map function!
-		// The same applies to other higher-order functions like `filter`.
-		for _, todoRecord := range todoRecords {
-			// append will create a new slice if the slice is nil.
-			todos = append(todos, unwrapRecord(&todoRecord))
-		}
+	// Pre-allocating the slice with the right size is more efficient.
+	todos := make([]*models.TodoItem, len(todoRecords))
+	// Mapping is idiomatically done in a loop, rather than a map function!
+	// The same applies to other higher-order functions like `filter`.
+	for i := range todoRecords {
+		todos[i] = unwrapRecord(&todoRecords[i])
 	}
 	return todos, nil
 }
